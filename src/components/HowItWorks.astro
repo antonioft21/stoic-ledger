@@ -1,0 +1,40 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="how-it-works" class="py-24 bg-surface-container-lowest">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-1">
+        <h2 class="font-headline font-extrabold text-3xl mb-4">{t.howItWorks.heading}</h2>
+        <p class="text-on-surface-variant font-light">{t.howItWorks.subheading}</p>
+      </div>
+
+      <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="relative p-8 bg-surface-container-low rounded-xl">
+          <span class="text-5xl font-headline font-extrabold text-primary/10 absolute top-4 right-4">01</span>
+          <h4 class="font-headline font-bold text-xl mb-3">{t.howItWorks.s1Title}</h4>
+          <p class="text-on-surface-variant text-sm">{t.howItWorks.s1Desc}</p>
+        </div>
+        <div class="relative p-8 bg-surface-container-low rounded-xl">
+          <span class="text-5xl font-headline font-extrabold text-primary/10 absolute top-4 right-4">02</span>
+          <h4 class="font-headline font-bold text-xl mb-3">{t.howItWorks.s2Title}</h4>
+          <p class="text-on-surface-variant text-sm">{t.howItWorks.s2Desc}</p>
+        </div>
+        <div class="relative p-8 bg-surface-container-low rounded-xl">
+          <span class="text-5xl font-headline font-extrabold text-primary/10 absolute top-4 right-4">03</span>
+          <h4 class="font-headline font-bold text-xl mb-3">{t.howItWorks.s3Title}</h4>
+          <p class="text-on-surface-variant text-sm">{t.howItWorks.s3Desc}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

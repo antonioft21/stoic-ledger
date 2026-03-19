@@ -1,0 +1,96 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const navLinks = [
+  { label: t.nav.product, href: '#product' },
+  { label: t.nav.solutions, href: '#solution' },
+  { label: t.nav.resources, href: '#resources' },
+  { label: t.nav.pricing, href: '#pricing' },
+];
+---
+
+<header class="sticky top-0 w-full z-50 bg-[#f8f9fa]">
+  <div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+    <div class="text-2xl font-bold text-[#2b3437] font-headline">
+      Stoic Ledger
+    </div>
+
+    <nav class="hidden md:flex items-center gap-8 font-headline font-semibold tracking-tight text-sm">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          data-nav-link
+          class="text-[#586064] hover:text-[#2b3437] transition-colors duration-200 pb-1 border-b-2 border-transparent"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <!-- Language switcher -->
+      <div class="flex items-center gap-1 text-xs font-semibold font-headline border border-outline-variant rounded-md overflow-hidden">
+        <a
+          href={lang === 'en' ? '#' : '/'}
+          class={`px-2.5 py-1.5 transition-colors ${lang === 'en' ? 'bg-primary text-on-primary' : 'text-[#586064] hover:bg-surface-container-low'}`}
+        >
+          EN
+        </a>
+        <a
+          href={lang === 'es' ? '#' : '/es/'}
+          class={`px-2.5 py-1.5 transition-colors ${lang === 'es' ? 'bg-primary text-on-primary' : 'text-[#586064] hover:bg-surface-container-low'}`}
+        >
+          ES
+        </a>
+      </div>
+
+      <button
+        onclick="document.getElementById('waitlist-modal').classList.remove('hidden')"
+        data-track="cta_click" data-track-label="get_started_nav"
+        class="bg-gradient-to-b from-primary to-primary-dim text-on-primary font-headline font-semibold text-sm px-6 py-2.5 rounded-md shadow-sm hover:opacity-90 transition-opacity"
+      >
+        {t.nav.getStarted}
+      </button>
+    </div>
+  </div>
+  <div class="bg-[#f1f4f6] h-[1px] w-full"></div>
+</header>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]');
+  const sectionIds = Array.from(links).map(l => l.getAttribute('href')?.replace('#', '')).filter(Boolean) as string[];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+
+  const activeClass = ['text-[#45655b]', 'border-[#45655b]'];
+  const inactiveClass = ['text-[#586064]', 'border-transparent'];
+
+  function setActive(id: string) {
+    links.forEach(link => {
+      const isActive = link.getAttribute('href') === `#${id}`;
+      link.classList.remove(...activeClass, ...inactiveClass);
+      link.classList.add(...(isActive ? activeClass : inactiveClass));
+    });
+  }
+
+  // Set first as default on load
+  if (sectionIds[0]) setActive(sectionIds[0]);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+  );
+
+  sections.forEach(s => observer.observe(s));
+</script>

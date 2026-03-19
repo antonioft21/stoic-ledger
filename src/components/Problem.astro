@@ -1,0 +1,54 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const problems = [
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9f403d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`,
+    text: t.problem.p1,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9f403d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    text: t.problem.p2,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9f403d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+    text: t.problem.p3,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9f403d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    text: t.problem.p4,
+  },
+];
+---
+
+<section class="py-24 bg-surface-container-low">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-col lg:flex-row gap-16 items-start">
+      <div class="lg:w-1/2">
+        <h2 class="font-headline font-bold text-4xl text-on-surface mb-8">
+          {t.problem.heading}
+        </h2>
+        <div class="w-20 h-1.5 bg-primary mb-8"></div>
+      </div>
+
+      <div class="lg:w-1/2 grid grid-cols-1 gap-6">
+        {problems.map((item) => (
+          <div class="flex gap-4 p-6 bg-surface-container-lowest rounded-lg border border-outline-variant/10 items-center">
+            <div class="bg-error/10 p-2 rounded-full shrink-0">
+              <Fragment set:html={item.icon} />
+            </div>
+            <p class="font-headline font-bold text-on-surface">{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

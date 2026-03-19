@@ -1,0 +1,55 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const benefits = [
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M8 11l3 3 5-5"/></svg>`,
+    title: t.benefits.b1Title,
+    desc: t.benefits.b1Desc,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+    title: t.benefits.b2Title,
+    desc: t.benefits.b2Desc,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+    title: t.benefits.b3Title,
+    desc: t.benefits.b3Desc,
+  },
+  {
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`,
+    title: t.benefits.b4Title,
+    desc: t.benefits.b4Desc,
+  },
+];
+---
+
+<section id="resources" class="py-32 bg-background">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-16">
+      <h2 class="font-headline font-bold text-4xl mb-2">{t.benefits.heading}</h2>
+      <p class="text-on-surface-variant">{t.benefits.subheading}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {benefits.map((b) => (
+        <div class="p-8 border border-outline-variant/10 rounded-lg hover:bg-surface-container-lowest transition-colors">
+          <div class="mb-4">
+            <Fragment set:html={b.icon} />
+          </div>
+          <h5 class="font-headline font-bold mb-2">{b.title}</h5>
+          <p class="text-on-surface-variant text-sm">{b.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

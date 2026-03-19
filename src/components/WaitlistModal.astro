@@ -1,0 +1,72 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div
+  id="waitlist-modal"
+  class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+  onclick="if(event.target === this) this.classList.add('hidden')"
+>
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+    <button
+      onclick="document.getElementById('waitlist-modal').classList.add('hidden')"
+      class="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface transition-colors"
+      aria-label={t.waitlist.close}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div id="waitlist-form-container">
+      <h2 class="font-headline font-bold text-2xl text-on-surface mb-2">{t.waitlist.title}</h2>
+      <p class="text-on-surface-variant mb-6">{t.waitlist.description}</p>
+
+      <form id="waitlist-form" class="flex flex-col gap-4">
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder={t.waitlist.placeholder}
+          class="w-full border border-outline-variant rounded-md px-4 py-3 text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+        />
+        <button
+          type="submit"
+          class="bg-gradient-to-b from-primary to-primary-dim text-on-primary font-headline font-bold py-3 rounded-md hover:opacity-90 transition-opacity"
+        >
+          {t.waitlist.button}
+        </button>
+        <!-- TODO: Connect form to email service (e.g. Resend, Mailchimp, Formspree) -->
+        <!-- Replace the form action/JS handler below with your chosen service -->
+      </form>
+    </div>
+
+    <div id="waitlist-success" class="hidden text-center py-4">
+      <div class="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 class="font-headline font-bold text-xl text-on-surface mb-2">{t.waitlist.successTitle}</h3>
+      <p class="text-on-surface-variant">{t.waitlist.successDesc}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { track } from '@vercel/analytics';
+
+  const form = document.getElementById('waitlist-form') as HTMLFormElement;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // TODO: Replace with actual form submission logic
+    // e.g. fetch('/api/waitlist', { method: 'POST', body: new FormData(form) })
+    track('waitlist_submit');
+    document.getElementById('waitlist-form-container')?.classList.add('hidden');
+    document.getElementById('waitlist-success')?.classList.remove('hidden');
+  });
+</script>

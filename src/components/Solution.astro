@@ -1,0 +1,63 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="solution" class="py-32 bg-background overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-20">
+      <span class="text-primary font-label uppercase tracking-widest text-sm font-bold block mb-4">
+        {t.solution.tag}
+      </span>
+      <h2 class="font-headline font-bold text-5xl text-on-surface">
+        {t.solution.heading}
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- Feature 1: Automated Reserves -->
+      <div class="space-y-6">
+        <div class="aspect-square bg-surface-container rounded-2xl flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            <path d="M6 11h4"/>
+            <path d="M14 11h4"/>
+          </svg>
+        </div>
+        <h3 class="font-headline font-bold text-2xl">{t.solution.f1Title}</h3>
+        <p class="text-on-surface-variant leading-relaxed">{t.solution.f1Desc}</p>
+      </div>
+
+      <!-- Feature 2: Runway Forecasting -->
+      <div class="space-y-6 md:pt-12">
+        <div class="aspect-square bg-surface-container rounded-2xl flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3 class="font-headline font-bold text-2xl">{t.solution.f2Title}</h3>
+        <p class="text-on-surface-variant leading-relaxed">{t.solution.f2Desc}</p>
+      </div>
+
+      <!-- Feature 3: Spend Authorization -->
+      <div class="space-y-6">
+        <div class="aspect-square bg-surface-container rounded-2xl flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#45655b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h3 class="font-headline font-bold text-2xl">{t.solution.f3Title}</h3>
+        <p class="text-on-surface-variant leading-relaxed">{t.solution.f3Desc}</p>
+      </div>
+    </div>
+  </div>
+</section>

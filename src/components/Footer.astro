@@ -1,0 +1,39 @@
+---
+import type { Lang } from '../i18n/index';
+import { useTranslations } from '../i18n/index';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { label: t.footer.privacy, href: lang === 'es' ? '/es/privacidad' : '/privacy' },
+  { label: t.footer.terms, href: lang === 'es' ? '/es/terminos' : '/terms' },
+  { label: t.footer.cookies, href: lang === 'es' ? '/es/cookies' : '/cookies' },
+  { label: t.footer.security, href: lang === 'es' ? '/es/seguridad' : '/security' },
+  { label: t.footer.contact, href: lang === 'es' ? '/es/contacto' : '/contact' },
+];
+---
+
+<footer class="w-full border-t border-[#abb3b7]/15 bg-[#f8f9fa]">
+  <div class="max-w-7xl mx-auto px-10 py-16 flex flex-col md:flex-row justify-between items-center gap-8">
+    <div class="flex flex-col gap-4">
+      <div class="font-headline font-bold text-[#2b3437] text-xl">Stoic Ledger</div>
+      <p class="text-[#586064] text-xs max-w-xs leading-relaxed">{t.footer.tagline}</p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="font-label text-xs uppercase tracking-widest text-[#586064] hover:underline decoration-[#45655b] underline-offset-4 transition-all duration-300"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>

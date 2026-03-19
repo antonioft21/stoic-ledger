@@ -1,0 +1,21 @@
+{
+  "name": "stoic-ledger",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^5.1.0",
+    "@vercel/analytics": "^2.0.1",
+    "astro": "^4.15.0",
+    "lucide": "^0.460.0",
+    "tailwindcss": "^3.4.10"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47"
+  }
+}
