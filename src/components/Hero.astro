@@ -17,17 +17,22 @@ const t = useTranslations(lang);
         {t.hero.headline1} <br/>
         <span class="text-primary italic">{t.hero.headline2}</span>
       </h1>
-      <p class="text-on-surface-variant text-xl md:text-2xl max-w-2xl mb-10 leading-relaxed font-light">
-        {t.hero.subheadline}
-      </p>
+      <div class="mb-10 space-y-3">
+        <p class="text-on-surface-variant text-xl md:text-2xl max-w-2xl leading-relaxed font-light">
+          {t.hero.subheadline}
+        </p>
+        <p class="text-on-surface font-headline font-semibold text-lg md:text-xl max-w-2xl">
+          {t.hero.subheadline2}
+        </p>
+      </div>
       <div class="flex flex-col sm:flex-row gap-4">
-        <button
-          onclick="document.getElementById('waitlist-modal').classList.remove('hidden')"
+        <a
+          href={lang === 'es' ? '/calculator' : '/en/calculator'}
           data-track="cta_click" data-track-label="calculate_real_money"
-          class="bg-gradient-to-b from-primary to-primary-dim text-on-primary px-8 py-4 rounded-md font-headline font-bold text-lg shadow-lg hover:-translate-y-px transition-all"
+          class="bg-gradient-to-b from-primary to-primary-dim text-on-primary px-8 py-4 rounded-md font-headline font-bold text-lg shadow-lg hover:-translate-y-px transition-all inline-block text-center"
         >
           {t.hero.ctaPrimary}
-        </button>
+        </a>
         <button
           onclick="document.getElementById('waitlist-modal').classList.remove('hidden')"
           data-track="cta_click" data-track-label="join_beta"
@@ -36,6 +41,7 @@ const t = useTranslations(lang);
           {t.hero.ctaSecondary}
         </button>
       </div>
+      <p class="mt-3 text-on-surface-variant text-sm">{t.hero.microCta}</p>
     </div>
 
     <!-- Visual Mockup -->

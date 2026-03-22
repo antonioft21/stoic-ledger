@@ -23,16 +23,19 @@ const { title, lang } = Astro.props;
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+  <body data-lang={lang} class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
     <slot />
     <Analytics />
     <script>
       import { track } from '@vercel/analytics';
+      const lang = document.body.dataset.lang ?? 'es';
       document.addEventListener('click', (e) => {
         const btn = (e.target as Element).closest('[data-track]');
         if (!btn) return;
         track(btn.getAttribute('data-track') as string, {
           label: btn.getAttribute('data-track-label') ?? 'unknown',
+          lang,
+          source_page: window.location.pathname,
         });
       });
     </script>

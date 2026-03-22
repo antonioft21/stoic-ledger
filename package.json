@@ -8,11 +8,16 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/tailwind": "^5.1.5",
+    "@astrojs/vercel": "^9.0.5",
     "@vercel/analytics": "^2.0.1",
-    "astro": "^4.15.0",
+    "astro": "^5.18.1",
     "lucide": "^0.460.0",
+    "resend": "^6.9.4",
     "tailwindcss": "^3.4.10"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

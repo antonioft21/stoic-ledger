@@ -1,0 +1,1 @@
+import{t as e}from"./index.mnOVsBea.js";const n=document.body.dataset.lang??"es";document.addEventListener("click",a=>{const t=a.target.closest("[data-track]");t&&e(t.getAttribute("data-track"),{label:t.getAttribute("data-track-label")??"unknown",lang:n,source_page:window.location.pathname})});

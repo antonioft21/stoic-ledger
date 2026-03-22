@@ -9,19 +9,20 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
+const home = lang === 'en' ? '/en/' : '/';
 const navLinks = [
-  { label: t.nav.product, href: '#product' },
-  { label: t.nav.solutions, href: '#solution' },
-  { label: t.nav.resources, href: '#resources' },
-  { label: t.nav.pricing, href: '#pricing' },
+  { label: t.nav.product, href: `${home}#product` },
+  { label: t.nav.solutions, href: `${home}#solution` },
+  { label: t.nav.resources, href: `${home}#resources` },
+  { label: t.nav.pricing, href: `${home}#pricing` },
 ];
 ---
 
 <header class="sticky top-0 w-full z-50 bg-[#f8f9fa]">
   <div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
-    <div class="text-2xl font-bold text-[#2b3437] font-headline">
+    <a href="/" class="text-2xl font-bold text-[#2b3437] font-headline hover:opacity-80 transition-opacity">
       Stoic Ledger
-    </div>
+    </a>
 
     <nav class="hidden md:flex items-center gap-8 font-headline font-semibold tracking-tight text-sm">
       {navLinks.map((link) => (
@@ -39,13 +40,13 @@ const navLinks = [
       <!-- Language switcher -->
       <div class="flex items-center gap-1 text-xs font-semibold font-headline border border-outline-variant rounded-md overflow-hidden">
         <a
-          href={lang === 'en' ? '#' : '/'}
+          href={lang === 'en' ? '#' : '/en/'}
           class={`px-2.5 py-1.5 transition-colors ${lang === 'en' ? 'bg-primary text-on-primary' : 'text-[#586064] hover:bg-surface-container-low'}`}
         >
           EN
         </a>
         <a
-          href={lang === 'es' ? '#' : '/es/'}
+          href={lang === 'es' ? '#' : '/'}
           class={`px-2.5 py-1.5 transition-colors ${lang === 'es' ? 'bg-primary text-on-primary' : 'text-[#586064] hover:bg-surface-container-low'}`}
         >
           ES
@@ -66,7 +67,10 @@ const navLinks = [
 
 <script>
   const links = document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]');
-  const sectionIds = Array.from(links).map(l => l.getAttribute('href')?.replace('#', '')).filter(Boolean) as string[];
+  // Extract the hash fragment (e.g. "/#product" → "product")
+  const sectionIds = Array.from(links)
+    .map(l => l.getAttribute('href')?.split('#')[1])
+    .filter(Boolean) as string[];
   const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
 
   const activeClass = ['text-[#45655b]', 'border-[#45655b]'];
@@ -74,7 +78,8 @@ const navLinks = [
 
   function setActive(id: string) {
     links.forEach(link => {
-      const isActive = link.getAttribute('href') === `#${id}`;
+      const linkId = link.getAttribute('href')?.split('#')[1];
+      const isActive = linkId === id;
       link.classList.remove(...activeClass, ...inactiveClass);
       link.classList.add(...(isActive ? activeClass : inactiveClass));
     });
@@ -82,6 +87,14 @@ const navLinks = [
 
   // Set first as default on load
   if (sectionIds[0]) setActive(sectionIds[0]);
+
+  // On click: set active immediately, don't wait for scroll
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      const id = link.getAttribute('href')?.split('#')[1];
+      if (id) setActive(id);
+    });
+  });
 
   const observer = new IntersectionObserver(
     (entries) => {

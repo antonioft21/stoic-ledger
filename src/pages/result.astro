@@ -1,0 +1,201 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations } from '../i18n/index';
+
+const lang = 'es';
+const t = useTranslations(lang);
+const tr = t.result;
+---
+
+<Layout title={`${tr.availableLabel} | Stoic Ledger`} lang={lang}>
+  <Header lang={lang} />
+
+  <main class="min-h-screen bg-background py-16 px-6">
+    <div class="max-w-xl mx-auto">
+
+      <!-- Content (hidden until JS runs) -->
+      <div id="result-content" class="hidden">
+
+        <!-- Risk badge -->
+        <div id="risk-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-headline font-bold mb-6"></div>
+
+        <!-- Label -->
+        <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest mb-2">{tr.availableLabel}</p>
+
+        <!-- Main number -->
+        <div id="result-amount" class="font-headline font-black text-6xl md:text-7xl tracking-tighter mb-2"></div>
+
+        <!-- Supporting text -->
+        <p class="text-on-surface-variant mb-3">
+          {tr.supporting}
+        </p>
+
+        <!-- Warning -->
+        <p class="text-sm font-semibold font-headline text-error mb-10">{tr.warning}</p>
+
+        <!-- Breakdown card -->
+        <div class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-6 space-y-3 mb-8">
+          <h3 class="font-headline font-bold text-sm uppercase tracking-wider text-on-surface-variant mb-4">{tr.breakdownTitle}</h3>
+          <div id="breakdown-rows" class="space-y-2"></div>
+          <!-- Divider + total row -->
+          <div class="border-t border-outline-variant/20 pt-3 mt-3">
+            <div class="flex justify-between font-headline font-bold text-on-surface">
+              <span>{tr.availableToSpend}</span>
+              <span id="breakdown-total"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <p class="text-on-surface-variant text-xs text-center mb-6">{tr.disclaimer}</p>
+
+        <!-- Actions -->
+        <div class="flex gap-3 mb-10">
+          <a
+            href="/calculator"
+            class="flex-1 text-center border border-outline-variant text-on-surface font-headline font-semibold text-sm py-2.5 rounded-lg hover:bg-surface-container-low transition-colors"
+          >
+            {tr.editInputs}
+          </a>
+          <button
+            id="try-another-btn"
+            class="flex-1 text-center bg-surface-container text-on-surface font-headline font-semibold text-sm py-2.5 rounded-lg hover:bg-surface-container-high transition-colors"
+          >
+            {tr.tryAnother}
+          </button>
+        </div>
+
+        <!-- Email capture -->
+        <div class="bg-surface-container-low rounded-xl p-6 mb-8">
+          <h3 class="font-headline font-bold text-lg mb-1">{tr.emailTitle}</h3>
+          <p class="text-on-surface-variant text-sm mb-4">{tr.emailDesc}</p>
+          <form id="email-form" class="flex gap-3">
+            <input
+              type="email"
+              name="email"
+              placeholder={tr.emailPlaceholder}
+              required
+              class="flex-1 border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+            <button type="submit" class="bg-primary text-on-primary font-headline font-bold text-sm px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+              {tr.emailButton}
+            </button>
+          </form>
+          <p id="email-success" class="hidden text-primary font-semibold text-sm mt-3">{tr.emailSuccess}</p>
+          <p id="email-error" class="hidden text-error text-sm mt-3">{tr.emailError}</p>
+        </div>
+
+        <!-- Recalculate -->
+        <a href="/calculator" class="block text-center text-on-surface-variant hover:text-on-surface text-sm transition-colors">
+          {tr.recalculate}
+        </a>
+
+      </div>
+
+      <!-- Redirect message if no data -->
+      <div id="no-data" class="hidden text-center py-20">
+        <p class="text-on-surface-variant mb-4">{tr.noData}</p>
+        <a href="/calculator" class="text-primary font-semibold">{tr.startCalc}</a>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>
+
+<script>
+  import { track } from '@vercel/analytics'
+  import { STORAGE_KEY } from '../lib/calculations'
+
+  const lang = document.body.dataset.lang ?? 'es'
+  const stored = localStorage.getItem(STORAGE_KEY)
+
+  if (!stored) {
+    track('result_view', { lang, has_data: false })
+    document.getElementById('no-data')?.classList.remove('hidden')
+  } else {
+    const { input, result } = JSON.parse(stored)
+
+    track('result_view', { lang, risk_level: result.riskLevel, available_to_spend: Math.round(result.availableToSpend) })
+
+    document.getElementById('result-content')?.classList.remove('hidden')
+
+    // Try another scenario
+    document.getElementById('try-another-btn')?.addEventListener('click', () => {
+      track('try_another_scenario', { lang, risk_level: result.riskLevel })
+      localStorage.removeItem(STORAGE_KEY)
+      window.location.href = '/calculator'
+    })
+
+    // Format currency
+    const fmt = (n: number) =>
+      new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
+
+    // Risk badge
+    const badge = document.getElementById('risk-badge')!
+    const badgeConfig = {
+      safe: { label: 'Seguro', classes: 'bg-primary-container text-on-primary-container' },
+      tight: { label: 'Justo', classes: 'bg-[#fef3c7] text-[#92400e]' },
+      risky: { label: 'En riesgo', classes: 'bg-error-container text-on-error-container' },
+    }
+    const bc = badgeConfig[result.riskLevel as keyof typeof badgeConfig]
+    badge.textContent = bc.label
+    badge.className = badge.className + ' ' + bc.classes
+
+    // Main number color
+    const amountEl = document.getElementById('result-amount')!
+    const amountColor = result.riskLevel === 'safe' ? 'text-primary' : result.riskLevel === 'tight' ? 'text-[#d97706]' : 'text-error'
+    amountEl.className = amountEl.className + ' ' + amountColor
+    amountEl.textContent = fmt(result.availableToSpend)
+
+    // Breakdown rows
+    const rows = [
+      { label: 'Saldo actual', value: input.currentBalance, positive: true },
+      { label: 'Ingresos esperados', value: input.expectedIncome, positive: true },
+      { label: `Reserva de impuestos (${input.taxRate}%)`, value: -result.taxReserve, positive: false },
+      { label: 'Gastos fijos', value: -input.fixedExpenses, positive: false },
+      { label: 'Pagos próximos', value: -input.upcomingPayments, positive: false },
+      { label: 'Colchón de seguridad', value: -input.safetyBuffer, positive: false },
+    ]
+
+    const breakdownEl = document.getElementById('breakdown-rows')!
+    rows.forEach(row => {
+      const div = document.createElement('div')
+      div.className = 'flex justify-between text-sm'
+      div.innerHTML = `
+        <span class="text-on-surface-variant">${row.label}</span>
+        <span class="${row.positive ? 'text-on-surface' : 'text-on-surface-variant'} font-medium">${row.positive ? '+' : ''}${fmt(row.value)}</span>
+      `
+      breakdownEl.appendChild(div)
+    })
+
+    document.getElementById('breakdown-total')!.textContent = fmt(result.availableToSpend)
+
+    // Email form
+    document.getElementById('email-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const form = e.target as HTMLFormElement
+      const email = (form.elements.namedItem('email') as HTMLInputElement).value
+      const btn = form.querySelector('button') as HTMLButtonElement
+      btn.disabled = true
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source: 'calculator_result' }),
+        })
+        if (!res.ok) throw new Error()
+        track('email_submit', { lang, source: 'result_page', risk_level: result.riskLevel })
+        form.classList.add('hidden')
+        document.getElementById('email-success')?.classList.remove('hidden')
+      } catch {
+        document.getElementById('email-error')?.classList.remove('hidden')
+        btn.disabled = false
+      }
+    })
+  }
+</script>

@@ -11,11 +11,11 @@ export function useTranslations(lang: Lang) {
 
 export function getLangFromUrl(url: URL): Lang {
   const [, lang] = url.pathname.split('/');
-  if (lang === 'es') return 'es';
-  return 'en';
+  if (lang === 'en') return 'en';
+  return 'es';
 }
 
 export function getLocalizedPath(path: string, lang: Lang): string {
-  if (lang === 'es') return `/es${path}`;
+  if (lang === 'en') return `/en${path}`;
   return path;
 }

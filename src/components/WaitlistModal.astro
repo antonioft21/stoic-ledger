@@ -37,13 +37,13 @@ const t = useTranslations(lang);
           class="w-full border border-outline-variant rounded-md px-4 py-3 text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
         />
         <button
+          id="waitlist-submit-btn"
           type="submit"
-          class="bg-gradient-to-b from-primary to-primary-dim text-on-primary font-headline font-bold py-3 rounded-md hover:opacity-90 transition-opacity"
+          class="bg-gradient-to-b from-primary to-primary-dim text-on-primary font-headline font-bold py-3 rounded-md hover:opacity-90 transition-opacity disabled:opacity-60"
         >
           {t.waitlist.button}
         </button>
-        <!-- TODO: Connect form to email service (e.g. Resend, Mailchimp, Formspree) -->
-        <!-- Replace the form action/JS handler below with your chosen service -->
+        <p id="waitlist-error" class="hidden text-error text-sm text-center"></p>
       </form>
     </div>
 
@@ -61,12 +61,32 @@ const t = useTranslations(lang);
   import { track } from '@vercel/analytics';
 
   const form = document.getElementById('waitlist-form') as HTMLFormElement;
-  form?.addEventListener('submit', (e) => {
+  const submitBtn = document.getElementById('waitlist-submit-btn') as HTMLButtonElement;
+  const errorEl = document.getElementById('waitlist-error') as HTMLParagraphElement;
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    // TODO: Replace with actual form submission logic
-    // e.g. fetch('/api/waitlist', { method: 'POST', body: new FormData(form) })
-    track('waitlist_submit');
-    document.getElementById('waitlist-form-container')?.classList.add('hidden');
-    document.getElementById('waitlist-success')?.classList.remove('hidden');
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+
+    submitBtn.disabled = true;
+    errorEl.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      track('waitlist_submit');
+      document.getElementById('waitlist-form-container')?.classList.add('hidden');
+      document.getElementById('waitlist-success')?.classList.remove('hidden');
+    } catch {
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      errorEl.classList.remove('hidden');
+      submitBtn.disabled = false;
+    }
   });
 </script>

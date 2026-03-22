@@ -1,0 +1,255 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { useTranslations } from '../../i18n/index';
+
+const lang = 'en';
+const t = useTranslations(lang);
+const tc = t.calculator;
+---
+
+<Layout title={`${tc.title} | Stoic Ledger`} lang={lang}>
+  <Header lang={lang} />
+
+  <main class="min-h-screen bg-background py-16 px-6">
+    <div class="max-w-xl mx-auto">
+
+      <!-- Back link -->
+      <a href="/en/" class="inline-flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-sm transition-colors font-headline font-semibold">
+        {tc.back}
+      </a>
+
+      <!-- Restored banner -->
+      <div id="restored-banner" class="hidden mt-4 px-4 py-2 bg-primary-container text-on-primary-container text-xs font-headline font-semibold rounded-lg">
+        ✓ {tc.restoredBanner}
+      </div>
+
+      <!-- Title -->
+      <h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface mb-3 mt-8">
+        {tc.title}
+      </h1>
+      <p class="text-on-surface-variant text-lg mb-10">
+        {tc.subtitle}
+      </p>
+
+      <!-- Form -->
+      <form id="calculator-form" data-result-path="/en/result" class="space-y-6">
+
+        <!-- currentBalance -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.currentBalance}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.currentBalanceHint}</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">€</span>
+            <input
+              type="number"
+              name="currentBalance"
+              min="0"
+              step="1"
+              placeholder="0"
+              required
+              class="w-full pl-8 pr-4 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+          </div>
+        </div>
+
+        <!-- expectedIncome -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.expectedIncome}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.expectedIncomeHint}</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">€</span>
+            <input
+              type="number"
+              name="expectedIncome"
+              min="0"
+              step="1"
+              placeholder="0"
+              required
+              class="w-full pl-8 pr-4 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+          </div>
+        </div>
+
+        <!-- fixedExpenses -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.fixedExpenses}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.fixedExpensesHint}</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">€</span>
+            <input
+              type="number"
+              name="fixedExpenses"
+              min="0"
+              step="1"
+              placeholder="0"
+              required
+              class="w-full pl-8 pr-4 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+          </div>
+        </div>
+
+        <!-- upcomingPayments -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.upcomingPayments}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.upcomingPaymentsHint}</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">€</span>
+            <input
+              type="number"
+              name="upcomingPayments"
+              min="0"
+              step="1"
+              placeholder="0"
+              required
+              class="w-full pl-8 pr-4 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+          </div>
+        </div>
+
+        <!-- taxRate -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.taxRate}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.taxRateHint}</p>
+          <div class="relative">
+            <input
+              type="number"
+              name="taxRate"
+              min="0"
+              max="100"
+              step="1"
+              value="25"
+              required
+              class="w-full pl-4 pr-8 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">%</span>
+          </div>
+        </div>
+
+        <!-- safetyBuffer -->
+        <div>
+          <label class="block font-headline font-semibold text-sm text-on-surface mb-0.5">
+            {tc.safetyBuffer}
+          </label>
+          <p class="text-on-surface-variant text-xs mb-1.5">{tc.safetyBufferHint}</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium">€</span>
+            <input
+              type="number"
+              name="safetyBuffer"
+              min="0"
+              step="1"
+              value="500"
+              required
+              class="w-full pl-8 pr-4 py-3 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button
+          id="submit-btn"
+          type="submit"
+          class="w-full bg-gradient-to-b from-primary to-primary-dim text-on-primary font-headline font-bold text-lg py-4 rounded-lg shadow-md hover:opacity-90 disabled:opacity-60 transition-opacity mt-4"
+        >
+          {tc.calculate}
+        </button>
+
+      </form>
+
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>
+
+<script>
+  import { track } from '@vercel/analytics'
+  import { calculate, STORAGE_KEY } from '../../lib/calculations'
+
+  const lang = document.body.dataset.lang ?? 'en'
+  const startTime = Date.now()
+  let hasStartedForm = false
+  let submitted = false
+  const fieldsTouched = new Set<string>()
+
+  track('calculator_view', { lang })
+
+  const form = document.getElementById('calculator-form') as HTMLFormElement
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement
+  const resultPath = form?.dataset.resultPath ?? '/en/result'
+
+  // Restore previous values from localStorage
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      const { input } = JSON.parse(stored)
+      Object.entries(input).forEach(([key, value]) => {
+        const el = form.elements.namedItem(key) as HTMLInputElement
+        if (el) el.value = String(value)
+      })
+      document.getElementById('restored-banner')?.classList.remove('hidden')
+    } catch {}
+  }
+
+  // Track field interactions
+  form.querySelectorAll('input').forEach(input => {
+    input.addEventListener('change', () => {
+      hasStartedForm = true
+      fieldsTouched.add(input.name)
+    })
+  })
+
+  // form_abandoned: user started but didn't submit
+  window.addEventListener('pagehide', () => {
+    if (hasStartedForm && !submitted) {
+      track('form_abandoned', {
+        lang,
+        fields_touched: fieldsTouched.size,
+        fields: Array.from(fieldsTouched).join(','),
+      })
+    }
+  })
+
+  // Form submit
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    submitted = true
+    submitBtn.disabled = true
+
+    const data = new FormData(form)
+    const input = {
+      currentBalance: Number(data.get('currentBalance')),
+      expectedIncome: Number(data.get('expectedIncome')),
+      fixedExpenses: Number(data.get('fixedExpenses')),
+      upcomingPayments: Number(data.get('upcomingPayments')),
+      taxRate: Number(data.get('taxRate')),
+      safetyBuffer: Number(data.get('safetyBuffer')),
+    }
+
+    const result = calculate(input)
+    const timeMs = Date.now() - startTime
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ input, result, timestamp: Date.now() }))
+
+    track('calculator_submit', {
+      lang,
+      risk_level: result.riskLevel,
+      time_to_complete_ms: timeMs,
+      available_to_spend: Math.round(result.availableToSpend),
+    })
+
+    window.location.href = resultPath
+  })
+</script>

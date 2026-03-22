@@ -1,0 +1,1 @@
+function t(e){const a=e.expectedIncome*(e.taxRate/100),c=e.currentBalance+e.expectedIncome-a-e.fixedExpenses-e.upcomingPayments-e.safetyBuffer,s=c>1e3?"safe":c>=0?"tight":"risky";return{taxReserve:a,availableToSpend:c,riskLevel:s}}const o="stoic_ledger_calculation";export{o as S,t as c};
